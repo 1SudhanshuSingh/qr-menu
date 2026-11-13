@@ -1,17 +1,11 @@
-import { neonConfig, Pool } from "@neondatabase/serverless";
-import { PrismaNeon } from "@prisma/adapter-neon";
+import { neon } from "@neondatabase/serverless";
+import { PrismaNeonHTTP } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 import { env } from "~/env";
 
-// In local dev, provide a WebSocket polyfill so the neon driver can connect
-if (typeof WebSocket === "undefined") {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  neonConfig.webSocketConstructor = require("ws") as typeof WebSocket;
-}
-
 const createPrismaClient = () => {
-  const pool = new Pool({ connectionString: env.DATABASE_URL });
-  const adapter = new PrismaNeon(pool);
+  const sql = neon(env.DATABASE_URL);
+  const adapter = new PrismaNeonHTTP(sql);
   return new PrismaClient({
     adapter,
     log: env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
