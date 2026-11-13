@@ -1,0 +1,39 @@
+{
+  "menu": {
+    "soldOut": "Sold out",
+    "featured": "Featured",
+    "special": "Special",
+    "review": {
+      "cta": "Enjoyed your visit? Leave us a review",
+      "button": "Review on Google"
+    },
+    "language": "Language",
+    "allergens": {
+      "title": "Allergens",
+      "GLUTEN": "Gluten",
+      "CRUSTACEANS": "Crustaceans",
+      "EGGS": "Eggs",
+      "FISH": "Fish",
+      "PEANUTS": "Peanuts",
+      "SOYBEANS": "Soybeans",
+      "MILK": "Milk",
+      "NUTS": "Nuts",
+      "CELERY": "Celery",
+      "MUSTARD": "Mustard",
+      "SESAME": "Sesame",
+      "SULPHITES": "Sulphur dioxide and sulphites",
+      "LUPIN": "Lupin",
+      "MOLLUSCS": "Molluscs"
+    },
+    "dietary": {
+      "VEGAN": "Vegan",
+      "VEGETARIAN": "Vegetarian",
+      "BEEF": "Beef",
+      "PORK": "Pork",
+      "CHICKEN": "Chicken",
+      "FISH": "Fish",
+      "SEAFOOD": "Seafood",
+      "OLD_GOAT": "Old Goat"
+    }
+  }
+}

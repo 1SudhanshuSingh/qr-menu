@@ -1,0 +1,39 @@
+{
+  "menu": {
+    "soldOut": "Esgotado",
+    "featured": "Destaque",
+    "special": "Especial",
+    "review": {
+      "cta": "Gostou? Deixe-nos uma avaliação",
+      "button": "Avaliar no Google"
+    },
+    "language": "Idioma",
+    "allergens": {
+      "title": "Alergénios",
+      "GLUTEN": "Glúten",
+      "CRUSTACEANS": "Crustáceos",
+      "EGGS": "Ovos",
+      "FISH": "Peixe",
+      "PEANUTS": "Amendoins",
+      "SOYBEANS": "Soja",
+      "MILK": "Leite",
+      "NUTS": "Frutos de casca rija",
+      "CELERY": "Aipo",
+      "MUSTARD": "Mostarda",
+      "SESAME": "Sésamo",
+      "SULPHITES": "Dióxido de enxofre e sulfitos",
+      "LUPIN": "Tremoço",
+      "MOLLUSCS": "Moluscos"
+    },
+    "dietary": {
+      "VEGAN": "Vegan",
+      "VEGETARIAN": "Vegetariano",
+      "BEEF": "Vaca",
+      "PORK": "Porco",
+      "CHICKEN": "Frango",
+      "FISH": "Peixe",
+      "SEAFOOD": "Marisco",
+      "OLD_GOAT": "Cabra Velha"
+    }
+  }
+}
