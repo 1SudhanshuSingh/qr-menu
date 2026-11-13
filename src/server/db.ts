@@ -1,11 +1,15 @@
-import { neon } from "@neondatabase/serverless";
-import { PrismaNeonHTTP } from "@prisma/adapter-neon";
+import { Pool, neonConfig } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
+import ws from "ws";
 import { env } from "~/env";
 
+// Node.js (Lambda/Netlify) doesn't have a native WebSocket — provide one
+neonConfig.webSocketConstructor = ws;
+
 const createPrismaClient = () => {
-  const sql = neon(env.DATABASE_URL);
-  const adapter = new PrismaNeonHTTP(sql);
+  const pool = new Pool({ connectionString: env.DATABASE_URL });
+  const adapter = new PrismaNeon(pool);
   return new PrismaClient({
     adapter,
     log: env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
