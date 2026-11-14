@@ -93,7 +93,9 @@ model Restaurant {
 
   categories  Category[]
   memberships Membership[]
+  reviews     Review[]
 }
+
 
 model Membership {
   id           String           @id @default(cuid())
@@ -199,4 +201,19 @@ enum DietaryTag {
   FISH
   SEAFOOD
   OLD_GOAT
+}
+
+// ---------------------------------------------------------------------------
+// Customer feedback (sub-4 star reviews stored for the restaurant owner)
+// ---------------------------------------------------------------------------
+
+model Review {
+  id           String   @id @default(cuid())
+  restaurantId String
+  rating       Int
+  comment      String?  @db.Text
+  locale       String?
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 }

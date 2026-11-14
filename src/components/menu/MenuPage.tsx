@@ -13,6 +13,9 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "~/navigation";
 import { formatPrice } from "~/lib/format";
 import { DietaryBadge } from "./DietaryBadge";
+import { LanguageSplash } from "./LanguageSplash";
+import { RecommendedSection } from "./RecommendedSection";
+import { ReviewWidget } from "./ReviewWidget";
 
 type DishWithT = Dish & { translations: DishTranslation[] };
 type CategoryWithDishes = Category & {
@@ -51,6 +54,11 @@ export function MenuPage({
   const catRefs = useRef<Map<string, HTMLElement>>(new Map());
   const navRef = useRef<HTMLDivElement>(null);
   const theme = restaurant.theme as Record<string, string>;
+
+  // Collect all available featured dishes across every category
+  const allFeaturedDishes = restaurant.categories.flatMap((c) =>
+    c.dishes.filter((d) => d.isFeatured && d.isAvailable),
+  );
 
   const enabledLocales = LOCALES.filter((l) =>
     restaurant.enabledLocales.includes(l.code),
@@ -98,6 +106,14 @@ export function MenuPage({
         color: "var(--color-ink)",
       } as React.CSSProperties}
     >
+      {/* Language selection on first visit */}
+      <LanguageSplash
+        enabledLocales={restaurant.enabledLocales}
+        currentLocale={locale}
+        slug={restaurant.slug}
+        restaurantName={restaurant.name}
+      />
+
       {/* ── Hero ─────────────────────────────────────────────── */}
       <header className="relative overflow-hidden">
         {/* Azulejo SVG background */}
@@ -223,8 +239,20 @@ export function MenuPage({
         </div>
       </div>
 
+      {/* ── Recommended dishes ───────────────────────────────── */}
+      {allFeaturedDishes.length > 0 && (
+        <div className="mx-auto max-w-xl">
+          <RecommendedSection
+            dishes={allFeaturedDishes}
+            locale={locale}
+            defaultLocale={restaurant.defaultLocale}
+            currency={restaurant.currency}
+          />
+        </div>
+      )}
+
       {/* ── Menu content ─────────────────────────────────────── */}
-      <main className="mx-auto max-w-xl px-4 pb-20 pt-2">
+      <main className="mx-auto max-w-xl px-4 pb-24 pt-2">
         {restaurant.categories.map((cat) => {
           const catName = getT(cat.translations, locale, restaurant.defaultLocale)?.name ?? "";
           const id = `cat-${cat.id}`;
@@ -314,6 +342,13 @@ export function MenuPage({
           </div>
         )}
       </main>
+
+      {/* ── Floating review button + popup ───────────────────── */}
+      <ReviewWidget
+        restaurantId={restaurant.id}
+        googleReviewUrl={restaurant.googleReviewUrl ?? null}
+        locale={locale}
+      />
 
       {/* ── Footer ───────────────────────────────────────────── */}
       <footer
