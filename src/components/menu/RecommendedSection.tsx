@@ -61,7 +61,7 @@ export function RecommendedSection({
       {/* Horizontal scroll strip */}
       <div
         className="flex gap-3 overflow-x-auto px-4 pb-3"
-        style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+        style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
       >
         {featured.map((dish) => {
           const tr = getT(dish.translations, locale, defaultLocale);
