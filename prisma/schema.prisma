@@ -93,6 +93,7 @@ model Restaurant {
 
   categories       Category[]
   memberships      Membership[]
+  tables           Table[]
   reviews          Review[]
   analyticsEvents  AnalyticsEvent[]
   waiterCalls      WaiterCall[]
@@ -208,6 +209,18 @@ enum DietaryTag {
 // ---------------------------------------------------------------------------
 // Customer feedback (sub-4 star reviews stored for the restaurant owner)
 // ---------------------------------------------------------------------------
+
+model Table {
+  id           String   @id @default(cuid())
+  restaurantId String
+  number       String   // "1", "2", "A3", "Bar 1", etc.
+  label        String?  // optional friendly name, e.g. "Window seat"
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, number])
+}
 
 model Review {
   id           String   @id @default(cuid())
