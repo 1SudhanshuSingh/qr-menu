@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import { api } from "~/trpc/react";
+import { ImageUpload } from "./ImageUpload";
 
 const LOCALES = [
   { code: "pt", label: "PT" },
@@ -229,16 +230,7 @@ export function DishForm({ categoryId: defaultCategoryId, categories, initial, o
           </Field>
         </div>
 
-        <Field label="Image URL">
-          <input
-            type="url"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            placeholder="https://…"
-            className="w-full rounded-xl border px-3.5 py-2.5 text-sm focus:outline-none"
-            style={{ borderColor: "#E8E0D8", color: "#1C1917" }}
-          />
-        </Field>
+        <ImageUpload value={imageUrl} onChange={setImageUrl} />
 
         {/* Flags */}
         <section>
@@ -248,7 +240,7 @@ export function DishForm({ categoryId: defaultCategoryId, categories, initial, o
               { key: "isAvailable", label: "Available",   val: isAvailable, set: setIsAvailable, on: "#2D6A4F", off: "#DC2626" },
               { key: "isFeatured",  label: "Chef's Pick", val: isFeatured,  set: setIsFeatured,  on: "#6B1D2A", off: "#A8A29E" },
               { key: "isSpecial",   label: "Special",     val: isSpecial,   set: setIsSpecial,   on: "#92400E", off: "#A8A29E" },
-            ] as const).map(({ key, label, val, set, on, off }) => (
+            ] as const).map(({ key, label, val, set, on }) => (
               <button
                 key={key}
                 type="button"
