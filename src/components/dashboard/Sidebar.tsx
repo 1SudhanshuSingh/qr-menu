@@ -2,17 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  BarChart2,
+  Bell,
+  ExternalLink,
+  Globe,
+  LayoutDashboard,
+  Palette,
+  QrCode,
+  Settings,
+  Star,
+  UtensilsCrossed,
+} from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 
-const NAV = [
-  { href: "/dashboard", label: "Overview", icon: "⬛", exact: true },
-  { href: "/dashboard/menu", label: "Menu", icon: "🍽️" },
-  { href: "/dashboard/calls", label: "Live Calls", icon: "🔔" },
-  { href: "/dashboard/reviews", label: "Reviews", icon: "⭐" },
-  { href: "/dashboard/analytics", label: "Analytics", icon: "📊" },
-  { href: "/dashboard/translations", label: "Translations", icon: "🌐" },
-  { href: "/dashboard/branding", label: "Branding", icon: "🎨" },
-  { href: "/dashboard/qr", label: "QR Code", icon: "📱" },
-  { href: "/dashboard/settings", label: "Settings", icon: "⚙️" },
+const NAV: { href: string; label: string; Icon: LucideIcon; exact?: boolean }[] = [
+  { href: "/dashboard",              label: "Overview",      Icon: LayoutDashboard, exact: true },
+  { href: "/dashboard/menu",         label: "Menu",          Icon: UtensilsCrossed },
+  { href: "/dashboard/calls",        label: "Live Calls",    Icon: Bell },
+  { href: "/dashboard/reviews",      label: "Reviews",       Icon: Star },
+  { href: "/dashboard/analytics",    label: "Analytics",     Icon: BarChart2 },
+  { href: "/dashboard/translations", label: "Translations",  Icon: Globe },
+  { href: "/dashboard/branding",     label: "Branding",      Icon: Palette },
+  { href: "/dashboard/qr",           label: "QR Code",       Icon: QrCode },
+  { href: "/dashboard/settings",     label: "Settings",      Icon: Settings },
 ];
 
 export function Sidebar({ restaurantName }: { restaurantName: string }) {
@@ -48,7 +61,7 @@ export function Sidebar({ restaurantName }: { restaurantName: string }) {
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-2 py-3">
-        {NAV.map(({ href, label, icon, exact }) => {
+        {NAV.map(({ href, label, Icon, exact }) => {
           const active = isActive(href, exact);
           return (
             <Link
@@ -61,11 +74,9 @@ export function Sidebar({ restaurantName }: { restaurantName: string }) {
                   : { color: "rgba(255,255,255,0.55)" }
               }
             >
-              <span className="text-base leading-none">{icon}</span>
+              <Icon size={15} strokeWidth={1.75} />
               <span className="font-medium">{label}</span>
-              {href === "/dashboard/calls" && (
-                <LiveCallsBadge />
-              )}
+              {href === "/dashboard/calls" && <LiveCallsBadge />}
             </Link>
           );
         })}
@@ -83,7 +94,7 @@ export function Sidebar({ restaurantName }: { restaurantName: string }) {
           className="flex items-center gap-2 text-xs transition-opacity hover:opacity-80"
           style={{ color: "rgba(255,255,255,0.4)" }}
         >
-          <span>↗</span>
+          <ExternalLink size={12} />
           <span>View live menu</span>
         </a>
       </div>
@@ -91,7 +102,6 @@ export function Sidebar({ restaurantName }: { restaurantName: string }) {
   );
 }
 
-// Tiny live badge that shows unresolved call count
 function LiveCallsBadge() {
   return (
     <span

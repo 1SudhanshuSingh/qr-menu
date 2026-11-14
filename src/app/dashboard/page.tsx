@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Bell, Download, Settings, Star, UtensilsCrossed } from "lucide-react";
 import { db } from "~/server/db";
 
 export default async function DashboardOverview() {
@@ -53,7 +54,7 @@ export default async function DashboardOverview() {
       {/* Page heading */}
       <div>
         <h1 className="text-2xl font-semibold" style={{ color: "#1C1917" }}>
-          Good {getTimeOfDay()}, {restaurant.name.split(" ")[0]} 👋
+          Good {getTimeOfDay()}, {restaurant.name.split(" ")[0]}
         </h1>
         <p className="mt-1 text-sm" style={{ color: "#78716C" }}>
           Here&apos;s what&apos;s happening with your restaurant today.
@@ -67,7 +68,7 @@ export default async function DashboardOverview() {
           className="flex items-center gap-3 rounded-xl px-5 py-4 text-white transition-opacity hover:opacity-90"
           style={{ background: "#DC2626" }}
         >
-          <span className="text-2xl">🔔</span>
+          <Bell size={20} strokeWidth={2} />
           <div>
             <p className="font-semibold">
               {unresolvedCalls} unresolved table call{unresolvedCalls > 1 ? "s" : ""}
@@ -109,19 +110,19 @@ export default async function DashboardOverview() {
         </h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { href: "/dashboard/menu", icon: "🍽️", label: "Edit menu" },
-            { href: "/dashboard/reviews", icon: "⭐", label: "View reviews" },
-            { href: "/dashboard/qr", icon: "📱", label: "Download QR" },
-            { href: "/dashboard/settings", icon: "⚙️", label: "Settings" },
-          ].map((a) => (
+            { href: "/dashboard/menu",     Icon: UtensilsCrossed, label: "Edit menu" },
+            { href: "/dashboard/reviews",  Icon: Star,            label: "View reviews" },
+            { href: "/dashboard/qr",       Icon: Download,        label: "Download QR" },
+            { href: "/dashboard/settings", Icon: Settings,        label: "Settings" },
+          ].map(({ href, Icon, label }) => (
             <a
-              key={a.href}
-              href={a.href}
+              key={href}
+              href={href}
               className="flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium transition-colors hover:bg-gray-50"
               style={{ background: "white", border: "1px solid #E8E0D8", color: "#1C1917" }}
             >
-              <span className="text-xl">{a.icon}</span>
-              {a.label}
+              <Icon size={18} strokeWidth={1.75} style={{ color: "#6B1D2A", flexShrink: 0 }} />
+              {label}
             </a>
           ))}
         </div>

@@ -1,10 +1,16 @@
+import { Star } from "lucide-react";
 import { db } from "~/server/db";
 
 function Stars({ n }: { n: number }) {
   return (
-    <span className="text-base">
+    <span className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((i) => (
-        <span key={i} style={{ color: i <= n ? "#F59E0B" : "#D6D3D1" }}>★</span>
+        <Star
+          key={i}
+          size={13}
+          strokeWidth={1.5}
+          style={{ color: i <= n ? "#F59E0B" : "#D6D3D1", fill: i <= n ? "#F59E0B" : "none" }}
+        />
       ))}
     </span>
   );
@@ -83,7 +89,7 @@ export default async function ReviewsPage() {
           className="rounded-2xl px-6 py-12 text-center"
           style={{ background: "white", border: "1px solid #E8E0D8" }}
         >
-          <p className="text-4xl">⭐</p>
+          <Star size={36} strokeWidth={1.25} style={{ color: "#D6D3D1", margin: "0 auto" }} />
           <p className="mt-3 font-medium" style={{ color: "#1C1917" }}>No reviews yet</p>
           <p className="text-sm" style={{ color: "#78716C" }}>
             Reviews appear here when customers rate under 4 stars.

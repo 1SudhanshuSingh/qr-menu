@@ -1,21 +1,22 @@
 "use client";
 
+import { Bell, CheckCircle2, CreditCard, UserRound } from "lucide-react";
 import { useState } from "react";
 
-type CallType = "waiter" | "bill" | "help";
+type CallType = "waiter" | "bill";
 
-const OPTIONS: { type: CallType; icon: string; label: Record<string, string> }[] = [
+const OPTIONS: { type: CallType; label: Record<string, string> }[] = [
   {
     type: "waiter",
-    icon: "🙋",
     label: { pt: "Chamar empregado", en: "Call waiter", es: "Llamar al camarero", fr: "Appeler le serveur", de: "Kellner rufen" },
   },
   {
     type: "bill",
-    icon: "💳",
     label: { pt: "Pedir a conta", en: "Request bill", es: "Pedir la cuenta", fr: "Demander l'addition", de: "Rechnung bitte" },
   },
 ];
+
+const OPTION_ICON = { waiter: UserRound, bill: CreditCard };
 
 export function WaiterCallWidget({
   restaurantId,
@@ -31,7 +32,7 @@ export function WaiterCallWidget({
   const [table, setTable] = useState(tableNumber ?? "");
   const [loading, setLoading] = useState(false);
 
-  if (!tableNumber && !open) return null; // Only show if table number known, or user opens it
+  if (!tableNumber && !open) return null;
 
   async function sendCall(type: CallType) {
     if (!table) return;
@@ -50,10 +51,10 @@ export function WaiterCallWidget({
 
   return (
     <>
-      {/* Floating bell button — left side so it doesn't overlap the review star */}
+      {/* Floating bell — bottom-left */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 left-5 z-40 flex h-13 w-13 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95"
+        className="fixed bottom-6 left-5 z-40 flex items-center justify-center rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95"
         style={{
           background: "var(--color-category, #1A3A6C)",
           color: "white",
@@ -62,7 +63,7 @@ export function WaiterCallWidget({
         }}
         aria-label="Call waiter"
       >
-        🔔
+        <Bell size={20} strokeWidth={1.75} />
       </button>
 
       {open && (
@@ -77,9 +78,9 @@ export function WaiterCallWidget({
           >
             {sent ? (
               <div className="p-8 text-center">
-                <div className="mb-3 text-5xl">✅</div>
+                <CheckCircle2 size={48} strokeWidth={1.25} style={{ color: "#2D6A4F", margin: "0 auto" }} />
                 <p
-                  className="font-display text-xl font-semibold"
+                  className="mt-4 font-display text-xl font-semibold"
                   style={{ fontFamily: "Georgia, serif", color: "var(--color-ink)" }}
                 >
                   {locale === "pt" ? "A caminho!" : "On the way!"}
@@ -106,21 +107,24 @@ export function WaiterCallWidget({
                 )}
 
                 <div className="mt-4 space-y-2">
-                  {OPTIONS.map((opt) => (
-                    <button
-                      key={opt.type}
-                      onClick={() => sendCall(opt.type)}
-                      disabled={loading || !table}
-                      className="flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
-                      style={{
-                        background: "var(--color-category, #1A3A6C)",
-                        color: "white",
-                      }}
-                    >
-                      <span className="text-xl">{opt.icon}</span>
-                      {opt.label[locale] ?? opt.label.en}
-                    </button>
-                  ))}
+                  {OPTIONS.map((opt) => {
+                    const Icon = OPTION_ICON[opt.type];
+                    return (
+                      <button
+                        key={opt.type}
+                        onClick={() => sendCall(opt.type)}
+                        disabled={loading || !table}
+                        className="flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
+                        style={{
+                          background: "var(--color-category, #1A3A6C)",
+                          color: "white",
+                        }}
+                      >
+                        <Icon size={18} strokeWidth={1.75} />
+                        {opt.label[locale] ?? opt.label.en}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <button
