@@ -3,7 +3,7 @@ import { MenuManager } from "./MenuManager";
 
 export default async function MenuPage() {
   const restaurant = await db.restaurant.findFirst({ where: { slug: "alma-portuguesa" } });
-  if (!restaurant) return <p>Not found</p>;
+  if (!restaurant) return <p>Restaurant not found.</p>;
 
   const categories = await db.category.findMany({
     where: { restaurantId: restaurant.id },
@@ -21,15 +21,16 @@ export default async function MenuPage() {
     <div className="max-w-4xl">
       <div className="mb-6">
         <h1 className="text-2xl font-semibold" style={{ color: "#1C1917" }}>
-          Menu Management
+          Menu
         </h1>
         <p className="mt-1 text-sm" style={{ color: "#78716C" }}>
-          Toggle availability, mark featured dishes, and update prices in real time.
+          Create and manage categories, dishes, prices, translations and allergens.
         </p>
       </div>
       <MenuManager
         categories={categories}
         currency={restaurant.currency}
+        restaurantId={restaurant.id}
       />
     </div>
   );
