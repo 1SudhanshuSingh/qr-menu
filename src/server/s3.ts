@@ -3,10 +3,10 @@ import { env } from "~/env";
 
 export const s3 = new S3Client({
   endpoint: env.AWS_ENDPOINT_URL_S3,
-  region: env.AWS_REGION,
+  region: env.AWS_REG,
   credentials: {
-    accessKeyId: env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: env.AWS_ACCESS_ID,
+    secretAccessKey: env.AWS_SECRET_ACCESS,
   },
   // Required for path-style URLs with Neon Object Storage
   forcePathStyle: true,
