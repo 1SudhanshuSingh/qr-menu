@@ -15,6 +15,11 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    AWS_ENDPOINT_URL_S3: z.string().url(),
+    AWS_ACCESS_ID: z.string().min(1),
+    AWS_SECRET_ACCESS: z.string().min(1),
+    AWS_REG: z.string().default("us-east-1"),
+    S3_BUCKET: z.string().default("images"),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -25,6 +30,11 @@ export const env = createEnv({
     AUTH_URL: process.env.AUTH_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    AWS_ENDPOINT_URL_S3: process.env.AWS_ENDPOINT_URL_S3,
+    AWS_ACCESS_ID: process.env.AWS_ACCESS_ID,
+    AWS_SECRET_ACCESS: process.env.AWS_SECRET_ACCESS,
+    AWS_REG: process.env.AWS_REG,
+    S3_BUCKET: process.env.S3_BUCKET,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,

@@ -91,9 +91,12 @@ model Restaurant {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  categories  Category[]
-  memberships Membership[]
-  reviews     Review[]
+  categories       Category[]
+  memberships      Membership[]
+  tables           Table[]
+  reviews          Review[]
+  analyticsEvents  AnalyticsEvent[]
+  waiterCalls      WaiterCall[]
 }
 
 
@@ -207,12 +210,47 @@ enum DietaryTag {
 // Customer feedback (sub-4 star reviews stored for the restaurant owner)
 // ---------------------------------------------------------------------------
 
+model Table {
+  id           String   @id @default(cuid())
+  restaurantId String
+  number       String   // "1", "2", "A3", "Bar 1", etc.
+  label        String?  // optional friendly name, e.g. "Window seat"
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, number])
+}
+
 model Review {
   id           String   @id @default(cuid())
   restaurantId String
   rating       Int
   comment      String?  @db.Text
   locale       String?
+  tableNumber  String?
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model AnalyticsEvent {
+  id           String   @id @default(cuid())
+  restaurantId String
+  type         String   // page_view | dish_view | language_change | qr_scan
+  meta         Json?
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model WaiterCall {
+  id           String   @id @default(cuid())
+  restaurantId String
+  tableNumber  String
+  type         String   @default("waiter") // waiter | bill | help
+  note         String?
+  resolved     Boolean  @default(false)
   createdAt    DateTime @default(now())
 
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)

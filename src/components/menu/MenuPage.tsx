@@ -13,9 +13,12 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "~/navigation";
 import { formatPrice } from "~/lib/format";
 import { DietaryBadge } from "./DietaryBadge";
+import { DishModal } from "./DishModal";
+import { AllergyFilter } from "./AllergyFilter";
 import { LanguageSplash } from "./LanguageSplash";
 import { RecommendedSection } from "./RecommendedSection";
 import { ReviewWidget } from "./ReviewWidget";
+import { WaiterCallWidget } from "./WaiterCallWidget";
 
 type DishWithT = Dish & { translations: DishTranslation[] };
 type CategoryWithDishes = Category & {
@@ -54,11 +57,31 @@ export function MenuPage({
   const catRefs = useRef<Map<string, HTMLElement>>(new Map());
   const navRef = useRef<HTMLDivElement>(null);
   const theme = restaurant.theme as Record<string, string>;
+  const [selectedDish, setSelectedDish] = useState<DishWithT | null>(null);
+  const [excludedAllergens, setExcludedAllergens] = useState<string[]>([]);
+  const [requiredDietary, setRequiredDietary] = useState<string[]>([]);
 
   // Collect all available featured dishes across every category
   const allFeaturedDishes = restaurant.categories.flatMap((c) =>
     c.dishes.filter((d) => d.isFeatured && d.isAvailable),
   );
+
+  // Track page view on mount
+  useEffect(() => {
+    void fetch("/api/analytics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ restaurantId: restaurant.id, type: "page_view" }),
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    }).catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function filterDish(dish: DishWithT): boolean {
+    if (excludedAllergens.some((a) => dish.allergens.includes(a as never))) return false;
+    if (requiredDietary.length > 0 && !requiredDietary.some((d) => dish.dietaryTags.includes(d as never))) return false;
+    return true;
+  }
 
   const enabledLocales = LOCALES.filter((l) =>
     restaurant.enabledLocales.includes(l.code),
@@ -239,6 +262,14 @@ export function MenuPage({
         </div>
       </div>
 
+      {/* ── Allergy / dietary filter ─────────────────────────── */}
+      <AllergyFilter
+        onFilterChange={(excluded, dietary) => {
+          setExcludedAllergens(excluded);
+          setRequiredDietary(dietary);
+        }}
+      />
+
       {/* ── Recommended dishes ───────────────────────────────── */}
       {allFeaturedDishes.length > 0 && (
         <div className="mx-auto max-w-xl">
@@ -279,7 +310,7 @@ export function MenuPage({
 
               {/* Dish list */}
               <div className="mt-3 space-y-0">
-                {cat.dishes.map((dish, i) => {
+                {cat.dishes.filter(filterDish).map((dish, i, arr) => {
                   const tr = getT(dish.translations, locale, restaurant.defaultLocale);
                   return (
                     <DishItem
@@ -293,7 +324,8 @@ export function MenuPage({
                       dietaryTags={dish.dietaryTags}
                       imageUrl={dish.imageUrl ?? undefined}
                       soldOutLabel={t("soldOut")}
-                      isLast={i === cat.dishes.length - 1}
+                      isLast={i === arr.length - 1}
+                      onClick={() => setSelectedDish(dish)}
                     />
                   );
                 })}
@@ -342,6 +374,23 @@ export function MenuPage({
           </div>
         )}
       </main>
+
+      {/* ── Dish detail modal ────────────────────────────────── */}
+      {selectedDish && (
+        <DishModal
+          dish={selectedDish}
+          locale={locale}
+          defaultLocale={restaurant.defaultLocale}
+          currency={restaurant.currency}
+          onClose={() => setSelectedDish(null)}
+        />
+      )}
+
+      {/* ── Waiter call button ───────────────────────────────── */}
+      <WaiterCallWidget
+        restaurantId={restaurant.id}
+        locale={locale}
+      />
 
       {/* ── Floating review button + popup ───────────────────── */}
       <ReviewWidget
@@ -401,6 +450,7 @@ function DishItem({
   imageUrl,
   soldOutLabel,
   isLast,
+  onClick,
 }: {
   name: string;
   description?: string;
@@ -412,10 +462,15 @@ function DishItem({
   imageUrl?: string;
   soldOutLabel: string;
   isLast: boolean;
+  onClick?: () => void;
 }) {
   return (
     <div
-      className={`flex items-start gap-4 py-4 transition-opacity ${!isAvailable ? "opacity-40" : ""} ${
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => { if (e.key === "Enter") onClick?.(); }}
+      className={`flex cursor-pointer items-start gap-4 py-4 transition-opacity active:opacity-70 ${!isAvailable ? "opacity-40" : ""} ${
         !isLast ? "border-b" : ""
       }`}
       style={{ borderColor: "var(--color-line)" }}

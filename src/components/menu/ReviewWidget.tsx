@@ -1,5 +1,6 @@
 "use client";
 
+import { Heart, Star, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 type Phase = "idle" | "rating" | "comment" | "done";
@@ -204,26 +205,33 @@ export function ReviewWidget({
                   </div>
                   <button
                     onClick={dismiss}
-                    className="ml-3 flex-shrink-0 text-2xl leading-none opacity-30 hover:opacity-60"
+                    className="ml-3 flex-shrink-0 rounded-full p-1 opacity-30 transition-opacity hover:opacity-60"
                     style={{ color: "var(--color-ink)" }}
                     aria-label="Close"
                   >
-                    ×
+                    <X size={18} strokeWidth={2} />
                   </button>
                 </div>
 
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center gap-2">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <button
                       key={n}
                       onClick={() => handleStar(n)}
                       onMouseEnter={() => setHovered(n)}
                       onMouseLeave={() => setHovered(0)}
-                      className="text-5xl transition-transform hover:scale-110 active:scale-95"
-                      style={{ color: starColor(n), lineHeight: 1 }}
+                      className="transition-transform hover:scale-110 active:scale-95"
                       aria-label={`${n} star${n > 1 ? "s" : ""}`}
                     >
-                      ★
+                      <Star
+                        size={40}
+                        strokeWidth={1.5}
+                        style={{
+                          color: starColor(n),
+                          fill: n <= (hovered || rating) ? starColor(n) : "none",
+                          transition: "color 0.1s, fill 0.1s",
+                        }}
+                      />
                     </button>
                   ))}
                 </div>
@@ -242,11 +250,17 @@ export function ReviewWidget({
                 >
                   {L.title}
                 </p>
-                <div className="mt-2 flex justify-center gap-1 text-2xl">
+                <div className="mt-2 flex justify-center gap-1">
                   {[1, 2, 3, 4, 5].map((n) => (
-                    <span key={n} style={{ color: n <= rating ? "#6B1D2A" : "#D6CBBF" }}>
-                      ★
-                    </span>
+                    <Star
+                      key={n}
+                      size={20}
+                      strokeWidth={1.5}
+                      style={{
+                        color: n <= rating ? "#6B1D2A" : "#D6CBBF",
+                        fill: n <= rating ? "#6B1D2A" : "none",
+                      }}
+                    />
                   ))}
                 </div>
                 <textarea
@@ -286,7 +300,12 @@ export function ReviewWidget({
             {/* Done phase */}
             {phase === "done" && (
               <div className="p-8 text-center">
-                <div className="mb-4 text-5xl">{rating >= 4 ? "🌟" : "🙏"}</div>
+                <div className="mb-4 flex justify-center">
+                  {rating >= 4
+                    ? <Star size={48} strokeWidth={1.25} style={{ color: "#6B1D2A", fill: "#6B1D2A" }} />
+                    : <Heart size={48} strokeWidth={1.25} style={{ color: "#6B1D2A", fill: "#6B1D2A80" }} />
+                  }
+                </div>
                 <p
                   className="font-display text-xl font-semibold"
                   style={{
