@@ -158,7 +158,7 @@ export function ReviewWidget({
       {/* Floating button */}
       <button
         onClick={openRating}
-        className="fixed bottom-6 right-5 z-40 flex h-13 w-13 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95"
+        className="fixed left-4 top-16 z-40 flex h-13 w-13 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95"
         style={{
           background: "var(--color-accent)",
           color: "white",
