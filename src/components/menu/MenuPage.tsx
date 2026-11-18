@@ -392,7 +392,7 @@ export function MenuPage({
         locale={locale}
       />
 
-      {/* ── Floating review button + popup ───────────────────── */}
+      {/* ── Floating review button (top left, below category bar) + popup ── */}
       <ReviewWidget
         restaurantId={restaurant.id}
         googleReviewUrl={restaurant.googleReviewUrl ?? null}
